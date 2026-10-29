@@ -1,0 +1,11 @@
+_privatefolder/ is a Next.js private folder because its name begins with _.
+
+Next.js excludes it—and anything inside it—from URL routing. So private.txt does not create a route and cannot be opened at /product/_privatefolder.
+
+Use private folders to keep route-specific supporting files near a page, such as:
+
+components
+helper functions
+constants
+tests
+documentation
