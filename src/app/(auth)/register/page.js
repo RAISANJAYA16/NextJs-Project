@@ -5,6 +5,7 @@ import Link from 'next/link';
 import React from 'react'
 import { useForm, } from 'react-hook-form';
 import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Spinner from '@/app/component/Spinner';
 import useAuthStore from '@/stores/authStores';
 
@@ -12,6 +13,8 @@ function Registerpage() {
   const { register, handleSubmit, getValues, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
   const [authMessage, setAuthMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const registerUser = useAuthStore((state) => state.registerUser);
 
@@ -27,6 +30,7 @@ function Registerpage() {
         address: {
           street: data.street.trim(),
           city: data.city.trim(),
+          province: data.province.trim(),
         },
       });
       const token = getAuthToken(result);
@@ -89,21 +93,46 @@ function Registerpage() {
               {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>}
             </div>
             <div>
+              <label htmlFor="province" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">Province / State</label>
+              <input type="text" id="province" autoComplete="address-level1" required className="px-3 py-2.5 text-sm text-slate-900 rounded-md bg-white w-full outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-700 dark:outline-neutral-600" {...register("province", { required: "Enter your province or state." })} />
+              {errors.province && <p className="mt-1 text-sm text-red-600">{errors.province.message}</p>}
+            </div>
+            <div>
               <label htmlFor="password" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">Password</label>
-              <input type="password" id="password" name="password" placeholder="••••••••" required className="px-3 py-2.5 text-sm text-slate-900 rounded-md bg-white w-full outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-700 dark:outline-neutral-600"
-              {...register("password", { required: "Enter a password." })}
-              />
+              <div className="relative">
+                <input type={showPassword ? "text" : "password"} id="password" name="password" placeholder="••••••••" required className="px-3 py-2.5 pr-10 text-sm text-slate-900 rounded-md bg-white w-full outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-700 dark:outline-neutral-600"
+                {...register("password", { required: "Enter a password." })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 flex items-center text-slate-500 transition hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                </button>
+              </div>
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
             </div>
             <div>
               <label htmlFor="confirm-password" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">Confirm
                 password</label>
-              <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required className="px-3 py-2.5 text-sm text-slate-900 rounded-md bg-white w-full outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-700 dark:outline-neutral-600"
-              {...register("confirm-password", {
-                required: "Confirm your password.",
-                validate: (value) => value === getValues("password") || "Passwords do not match.",
-              })}
-              />
+              <div className="relative">
+                <input type={showConfirmPassword ? "text" : "password"} id="confirm-password" name="confirm-password" placeholder="••••••••" required className="px-3 py-2.5 pr-10 text-sm text-slate-900 rounded-md bg-white w-full outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-700 dark:outline-neutral-600"
+                {...register("confirm-password", {
+                  required: "Confirm your password.",
+                  validate: (value) => value === getValues("password") || "Passwords do not match.",
+                })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 flex items-center text-slate-500 transition hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
+                  aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                >
+                  {showConfirmPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                </button>
+              </div>
               {errors["confirm-password"] && <p className="mt-1 text-sm text-red-600">{errors["confirm-password"].message}</p>}
             </div>
             <div className="flex items-start flex-wrap gap-2">

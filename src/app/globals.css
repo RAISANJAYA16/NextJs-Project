@@ -19,12 +19,9 @@
   --color-primary-800: var(--primary);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-  }
+:root:has(.dark) {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
@@ -37,7 +34,7 @@ body {
 /*
 Class based themes
 */
-@custom-variant dark (&:where(.dark .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 
 .card-body{

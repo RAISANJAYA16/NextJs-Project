@@ -33,7 +33,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Vercel
+# tercel
 .vercel/
 
 # TypeScript
@@ -42,3 +42,4 @@ next-env.d.ts
 
 # Operating system and editor files
 .DS_Store
+/note.txt

@@ -1,9 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import useCartStore from "@/stores/cartStore";
 import { getOrderTotals } from "@/lib/orderTotals";
-
+import { useRouter } from "next/navigation";
+import useAuthStore from "@/stores/authStores";
+import { LOGIN_ROUTE } from "@/app/constants/routes";
+import BackButton from "../component/BackButton";
+import { toast } from "react-toastify";
 export default function CheckoutPage() {
   const products = useCartStore((state) => state.products);
   const subtotal = products.reduce(
@@ -12,10 +17,24 @@ export default function CheckoutPage() {
     0,
   );
   const { savings, deliveryCharge, tax, total } = getOrderTotals(subtotal);
+  const router = useRouter();
+  const isAuth = useAuthStore((state) => state.isAuth);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+
+  useEffect(() => {
+    if (hasHydrated && !isAuth) {
+      toast.info("You need to be logged in to access the checkout page.");
+      router.replace(LOGIN_ROUTE);
+    }
+  }, [hasHydrated, isAuth, router]);
+
+  if (!hasHydrated || !isAuth) return null;
 
   return (
     <section className="bg-white py-8 dark:bg-gray-900 md:py-16">
       <div className="mx-auto max-w-screen-lg px-4">
+     
+        <BackButton/>
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           Checkout
         </h1>

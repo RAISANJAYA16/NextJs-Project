@@ -4,12 +4,14 @@ import { getAuthToken, getAuthUser, login } from '@/api/auth';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Spinner from '@/app/component/Spinner';
 import useAuthStore from '@/stores/authStores';
 
 function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [authMessage, setAuthMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({ mode: 'onBlur' });
   const loginUser = useAuthStore((state) => state.loginUser);
 
@@ -68,16 +70,26 @@ function LoginPage() {
           </div>
           <div>
             <label htmlFor="password" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">Password</label>
-            <input
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              aria-invalid={Boolean(errors.password)}
-              aria-describedby={errors.password ? 'password-error' : undefined}
-              className="w-full rounded-md bg-white px-3 py-2.5 text-sm text-slate-900 outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:bg-neutral-800 dark:text-slate-50 dark:outline-neutral-700"
-              {...register('password', { required: 'Enter your password.' })}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                autoComplete="current-password"
+                placeholder="••••••••"
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={errors.password ? 'password-error' : undefined}
+                className="w-full rounded-md bg-white px-3 py-2.5 pr-10 text-sm text-slate-900 outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:bg-neutral-800 dark:text-slate-50 dark:outline-neutral-700"
+                {...register('password', { required: 'Enter your password.' })}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="absolute inset-y-0 right-3 flex items-center text-slate-500 transition hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
+            </div>
             {errors.password && <p id="password-error" className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
           </div>
           <div className="flex items-start flex-wrap gap-2">

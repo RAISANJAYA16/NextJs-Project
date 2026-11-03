@@ -1,5 +1,28 @@
 import { API_BASE_URL } from "@/api/config";
 
+const HIDDEN_PRODUCT_KEYWORDS = [
+  "shoe",
+  "shoes",
+  "sneaker",
+  "sneakers",
+  "sandals",
+  "boots",
+];
+
+function shouldHideProduct(product) {
+  const searchableText = [
+    product?.name,
+    product?.category,
+    product?.brand,
+    product?.description,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return HIDDEN_PRODUCT_KEYWORDS.some((keyword) => searchableText.includes(keyword));
+}
+
 function sortProducts(products, sort) {
   const sortedProducts = [...products];
 
@@ -45,5 +68,6 @@ export async function getProducts(sort = "latest") {
   }
 
   const products = await response.json();
-  return sortProducts(products, sort);
+  const visibleProducts = products.filter((product) => !shouldHideProduct(product));
+  return sortProducts(visibleProducts, sort);
 }
