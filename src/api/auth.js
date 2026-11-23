@@ -1,7 +1,7 @@
-import { API_BASE_URL } from "./config";
+import { APP_API_BASE_URL } from "./config";
 
 async function authRequest(endpoint, data) {
-  const response = await fetch(`${API_BASE_URL}/api/auth/${endpoint}`, {
+  const response = await fetch(`${APP_API_BASE_URL}/api/auth/${endpoint}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,6 +62,6 @@ export function getAuthUser(result, fallbackUser) {
 }
 
 export const logout = () =>
-  fetch(`${API_BASE_URL}/api/auth/logout`, {
+  fetch(`${APP_API_BASE_URL}/api/auth/logout`, {
     method: "POST",
   });

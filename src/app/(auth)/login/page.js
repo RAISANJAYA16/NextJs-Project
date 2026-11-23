@@ -20,7 +20,7 @@ function LoginPage() {
     setAuthMessage('');
 
     try {
-      const result = await login({ email: data.email, password: data.password });
+      const result = await login({ identifier: data.email, password: data.password });
       const token = getAuthToken(result);
 
       if (!token) {
@@ -49,21 +49,17 @@ function LoginPage() {
         </div>
         <form className="space-y-6" noValidate onSubmit={handleSubmit(onValidSubmit)}>
           <div>
-            <label htmlFor="email" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">Email</label>
+            <label htmlFor="email" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">Email or account name</label>
             <input
-              type="email"
+              type="text"
               id="email"
-              autoComplete="email"
-              placeholder="john@gmail.com"
+              autoComplete="username"
+              placeholder="Email or account name"
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? 'email-error' : undefined}
               className="w-full rounded-md bg-white px-3 py-2.5 text-sm text-slate-900 outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:bg-neutral-800 dark:text-slate-50 dark:outline-neutral-700"
               {...register('email', {
-                required: 'Enter your email address.',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address.',
-                 },
+                required: 'Enter your email or account name.',
               })}
             />
             {errors.email && <p id="email-error" className="mt-1 text-sm text-red-600">{errors.email.message}</p>}

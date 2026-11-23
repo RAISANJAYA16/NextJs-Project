@@ -6,9 +6,14 @@
     "dev": "next dev --webpack -p 8000",
     "build": "next build",
     "start": "next start -p 8000",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:merchant": "node --env-file=.env scripts/seed-merchant.mjs",
+    "import:products": "node --env-file=.env scripts/import-products.mjs"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.12.3",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",

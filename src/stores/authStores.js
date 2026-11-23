@@ -21,7 +21,8 @@ const useAuthStore = create(
       {
         name: "zustand:auth-storage",
         skipHydration: true,
-        version: 2,
+        // Version 3 invalidates tokens issued by the previous remote API.
+        version: 4,
         migrate: () => ({ user: null, token: null, isAuth: false }),
         partialize: ({ user, token, isAuth }) => ({ user, token, isAuth }),
       },

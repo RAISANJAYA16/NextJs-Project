@@ -14,7 +14,7 @@ const ProductsTable = ({ products = [] }) => {
   const token = useAuthStore((state) => state.token);
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState("");
-  const visibleProducts = products.slice(0, 10);
+  const visibleProducts = products;
 
   async function handleDelete(product) {
     const id = product._id ?? product.id;
@@ -93,7 +93,7 @@ const ProductsTable = ({ products = [] }) => {
                     <div className="flex items-center gap-6">
                       {id != null ? (
                         <Link
-                          href={`/product-management/update/${encodeURIComponent(id)}`}
+                          href={`/private/product-management/update/${encodeURIComponent(id)}`}
                           aria-label={`Edit ${product.name || "product"}`}
                           title="Edit"
                           className="font-medium text-blue-600 hover:underline dark:text-blue-400 cursor-pointer"  

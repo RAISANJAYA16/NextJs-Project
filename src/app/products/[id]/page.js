@@ -1,4 +1,4 @@
-import { getProductById } from "@/api/product";
+import { getProductById } from "@/lib/products";
 import { notFound } from "next/navigation";
 
 async function fetchProductById(id) {

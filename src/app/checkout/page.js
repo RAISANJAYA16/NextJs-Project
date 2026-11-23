@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useCartStore from "@/stores/cartStore";
 import { getOrderTotals } from "@/lib/orderTotals";
+import { createOrder } from "@/lib/order";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/authStores";
 import { LOGIN_ROUTE } from "@/app/constants/routes";
@@ -11,6 +12,7 @@ import BackButton from "../component/BackButton";
 import { toast } from "react-toastify";
 export default function CheckoutPage() {
   const products = useCartStore((state) => state.products);
+  const clearCart = useCartStore((state) => state.clearCart);
   const subtotal = products.reduce(
     (total, product) =>
       total + Number(product.price ?? 0) * (product.quantity ?? 1),
@@ -19,7 +21,43 @@ export default function CheckoutPage() {
   const { savings, deliveryCharge, tax, total } = getOrderTotals(subtotal);
   const router = useRouter();
   const isAuth = useAuthStore((state) => state.isAuth);
+  const token = useAuthStore((state) => state.token);
+  const logoutUser = useAuthStore((state) => state.logoutUser);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handlePlaceOrder() {
+    setIsSubmitting(true);
+
+    try {
+      const orderData = {
+        products: products.map((product) => ({
+          productId: product._id ?? product.id,
+          name: product.name,
+          price: Number(product.price ?? 0),
+          imageUrl: product.imageUrls?.[0] ?? null,
+          quantity: product.quantity ?? 1,
+        })),
+      };
+
+      await createOrder(orderData, token);
+      clearCart();
+      toast.success("Your order was placed successfully.");
+    } catch (error) {
+      if (error?.status === 401) {
+        logoutUser();
+        toast.error("Your session expired. Please log in again.");
+        router.replace(LOGIN_ROUTE);
+        return;
+      }
+
+      toast.error(
+        error instanceof Error ? error.message : "Unable to place your order.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   useEffect(() => {
     if (hasHydrated && !isAuth) {
@@ -121,9 +159,14 @@ export default function CheckoutPage() {
                   </dd>
                 </div>
               </dl>
-              <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-                Payment and order submission are not available yet.
-              </p>
+              <button
+                type="button"
+                onClick={handlePlaceOrder}
+                disabled={isSubmitting || products.length === 0}
+                className="mt-6 w-full rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmitting ? "Submitting order..." : "Place order"}
+              </button>
             </aside>
           </div>
         )}

@@ -1,4 +1,5 @@
-import { API_BASE_URL } from "@/api/config";
+import { connectToDatabase } from "@/lib/server/db";
+import Product from "@/models/Product";
 
 const HIDDEN_PRODUCT_KEYWORDS = [
   "shoe",
@@ -55,19 +56,36 @@ function sortProducts(products, sort) {
 }
 
 export async function getProducts(sort = "latest") {
-  const response = await fetch(
-    `${API_BASE_URL}/api/products`,
-    { cache: "no-store" },
+  await connectToDatabase();
+  const products = await Product.find().sort({ createdAt: -1 }).lean();
+  const serializedProducts = products.map((product) => ({
+    ...product,
+    _id: String(product._id),
+  }));
+  const visibleProducts = serializedProducts.filter(
+    (product) => !shouldHideProduct(product),
   );
-
-  if (!response.ok) {
-    const details = await response.text();
-    throw new Error(
-      `Unable to load products (${response.status})${details ? `: ${details}` : ""}`,
-    );
-  }
-
-  const products = await response.json();
-  const visibleProducts = products.filter((product) => !shouldHideProduct(product));
   return sortProducts(visibleProducts, sort);
+}
+
+export async function getProductById(id) {
+  try {
+    await connectToDatabase();
+    const product = await Product.findById(id).lean();
+    return product
+      ? { ...product, _id: String(product._id) }
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getCategories() {
+  await connectToDatabase();
+  return (await Product.distinct("category")).filter(Boolean).sort();
+}
+
+export async function getBrands() {
+  await connectToDatabase();
+  return (await Product.distinct("brand")).filter(Boolean).sort();
 }

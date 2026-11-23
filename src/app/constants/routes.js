@@ -10,6 +10,6 @@ export const CART_ROUTE = "/cart";
 export const REGISTER_ROUTE = "/register";
 export const FORGET_PASSWORD_ROUTE = "/forget-password";
 export const LOGOUT_ROUTE = "/logout";
-export const ADD_ROUTE="/product-management/add"
+export const ADD_ROUTE="/private/product-management/add"
 
 

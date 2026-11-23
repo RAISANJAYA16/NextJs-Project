@@ -51,7 +51,7 @@ const ProductForm = ({ initialProduct }) => {
       if (isEditing) {
         const id = initialProduct._id ?? initialProduct.id;
         await updateProduct(id, productPayload, token);
-        router.push("/product-management");
+        router.push("/private/product-management");
         router.refresh();
       } else {
         await addProduct(productPayload, token);

@@ -1,17 +1,16 @@
-import { API_BASE_URL } from "@/api/config";
+import { APP_API_BASE_URL } from "@/api/config";
 
 async function orderRequest(path, { method, data, token }) {
   if (!token) {
     throw new Error("You must log in to access orders.");
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${APP_API_BASE_URL}${path}`, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
       ...(data ? { "Content-Type": "application/json" } : {}),
     },
-    credentials: "include",
     ...(data ? { body: JSON.stringify(data) } : {}),
   });
 
@@ -29,9 +28,11 @@ async function orderRequest(path, { method, data, token }) {
       typeof result === "object" && result !== null
         ? result.message || result.error
         : result;
-    throw new Error(
+    const error = new Error(
       `Unable to ${method === "GET" ? "load orders" : "create order"} (${response.status})${message ? `: ${message}` : ""}`,
     );
+    error.status = response.status;
+    throw error;
   }
 
   return result;

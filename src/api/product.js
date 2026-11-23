@@ -1,8 +1,7 @@
 
 import formatQuery from "@/utils/QueryFormatter";
-import { API_BASE_URL } from "./config";
-import axios from "axios";
-const PRODUCTS_API_URL = `${API_BASE_URL}/api/products`;
+import { APP_API_BASE_URL } from "./config";
+const PRODUCTS_API_URL = `${APP_API_BASE_URL}/api/products`;
 
 export async function getProducts(query = {}) {
   const filter = formatQuery(query?.filter);
@@ -126,12 +125,22 @@ export async function deleteProduct(id, token) {
   }
 }
 
-export const getCategories = async () => {
-  const response = await axios.get(`${PRODUCTS_API_URL}/categories`);
-  return response.data;
-};
+async function getProductMetadata(endpoint, label) {
+  const response = await fetch(`${PRODUCTS_API_URL}/${endpoint}`, {
+    cache: "no-store",
+  });
 
-export const getBrands = async () => {
-  const response = await axios.get(`${PRODUCTS_API_URL}/brands`);
-  return response.data;
-};
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(
+      `Unable to load ${label} (${response.status})${details ? `: ${details}` : ""}`,
+    );
+  }
+
+  return response.json();
+}
+
+export const getCategories = () =>
+  getProductMetadata("categories", "categories");
+
+export const getBrands = () => getProductMetadata("brands", "brands");

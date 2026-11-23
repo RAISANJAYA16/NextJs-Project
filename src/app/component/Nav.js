@@ -14,6 +14,7 @@ function Nav() {
   const pathname = usePathname();
   const router = useRouter();
   const isAuth = useAuthStore((state) => state.isAuth);
+  const user = useAuthStore((state) => state.user);
   const logoutUser = useAuthStore((state) => state.logoutUser);
   const theme = usePreferenceStore((state) => state.theme);
   const toggleTheme = usePreferenceStore((state) => state.toggleTheme);
@@ -87,6 +88,24 @@ function Nav() {
           >
             <FiShoppingCart className="h-5 w-5" />
           </Link>
+
+          {user?.role === "merchant" && (
+            <Link
+              href="/private/product-management"
+              className="hidden rounded-full border border-primary px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:inline-flex"
+            >
+              Manage store
+            </Link>
+          )}
+
+          {user?.role === "merchant" && (
+            <Link
+              href="/private/orders"
+              className="hidden rounded-full border border-primary px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:inline-flex"
+            >
+              Orders
+            </Link>
+          )}
 
           {isAuth ? (
             <button

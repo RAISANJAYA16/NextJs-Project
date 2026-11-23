@@ -1,18 +1,20 @@
 "use client";
 
 import usePreferenceStore from "@/stores/peferencesStore";
-import { GiButtonFinger } from "react-icons/gi";
+import { FaSun } from "react-icons/fa";
 
 const ThemeSwitcher = () => {
-    const {toggleTheme}= usePreferenceStore.getState();
+  const toggleTheme = usePreferenceStore((state) => state.toggleTheme);
+
   return (
-
     <button
-       onClick={toogleTheme}>
-    <FaSun/>
-       </button>
+      type="button"
+      onClick={toggleTheme}
+      aria-label="Toggle theme"
+    >
+      <FaSun aria-hidden="true" />
+    </button>
+  );
+};
 
-  )
-}
-
-export default ThemeSwitcher
+export default ThemeSwitcher;

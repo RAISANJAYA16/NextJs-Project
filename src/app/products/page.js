@@ -5,7 +5,7 @@ import { CART_ROUTE } from "../constants/routes";
 import ProductSort from "../component/ProductSort";
 import ProductLimit from "../component/ProductLimit";
 import ProductFilter from "../component/ProductFilter";
-import { getBrands, getCategories } from "@/api/product";
+import { getBrands, getCategories } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 

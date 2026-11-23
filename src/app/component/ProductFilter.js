@@ -72,7 +72,7 @@ const ProductFilter = ({ categories, brands }) => {
 <div>
   {isOpen && (
   <div id="drawerOverlay" className="fixed inset-0 `z-1000` flex h-full w-full items-center justify-center bg-black/50">
-    <div role="dialog" aria-modal="true" aria-labelled="filter-heading" tabIndex={-1} className="relative ml-auto h-screen w-full max-w-sm bg-white shadow-lg outline-none dark:bg-neutral-800">
+    <div role="dialog" aria-modal="true" aria-labelledby="filter-heading" tabIndex={-1} className="relative ml-auto h-screen w-full max-w-sm bg-white shadow-lg outline-none dark:bg-neutral-800">
       <div className="overflow-auto p-6 h-[calc(100vh-66px)]">
         <div className="flex items-center border-b border-slate-300 pb-3 mb-6 dark:border-neutral-700">
           <h2 id="filter-heading" className="text-slate-900 text-lg font-semibold dark:text-slate-50">Filter</h2>

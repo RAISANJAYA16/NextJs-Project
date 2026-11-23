@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProductById } from "@/api/product";
+import { getProductById } from "@/lib/products";
 import ProductForm from "../../_components/form";
 import BackButton from "@/app/component/BackButton";
 
